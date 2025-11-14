@@ -4,7 +4,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_HOST}/personal
+    url: jdbc:mysql://${MYSQL_HOST}/personal
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
 
@@ -13,7 +13,11 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
+        globally_quoted_identifiers: true
         dialect: org.hibernate.dialect.MySQLDialect
 
 server:
-  port: 8081
+  port: 8080
+
+fast-api:
+  url: ${FASTAPI_APP}
