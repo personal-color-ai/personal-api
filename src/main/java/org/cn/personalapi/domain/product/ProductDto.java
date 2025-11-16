@@ -1,5 +1,7 @@
 package org.cn.personalapi.domain.product;
 
+import java.util.List;
+
 public class ProductDto {
 
     public record ListRes (
@@ -25,7 +27,8 @@ public class ProductDto {
         Integer reviewCountTwo,
         Integer reviewCountThree,
         Integer reviewCountFour,
-        Integer reviewCountFive
+        Integer reviewCountFive,
+        List<OptionDto.DetailRes> options
     ) {}
 
     public record ReviewReq (

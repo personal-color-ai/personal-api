@@ -36,7 +36,8 @@ public class ProductConvertor {
                 countReviewsByRating(product, 2),
                 countReviewsByRating(product, 3),
                 countReviewsByRating(product, 4),
-                countReviewsByRating(product, 5)
+                countReviewsByRating(product, 5),
+                toOptionDetailRes(product.getOptions())
         );
     }
 
@@ -44,5 +45,14 @@ public class ProductConvertor {
         return Math.toIntExact(product.getReviews().stream()
                 .filter(r -> r.getRating() == rating)
                 .count());
+    }
+
+    private static List<OptionDto.DetailRes> toOptionDetailRes(List<Option> option) {
+        return option.stream().map(opt -> new OptionDto.DetailRes(
+                opt.getId(),
+                opt.getName(),
+                opt.getImageUrl(),
+                opt.getOptionNo()
+        )).toList();
     }
 }
