@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Table(name = "product")
 public class Product extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +36,8 @@ public class Product extends AuditingEntity {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     @BatchSize(size = 10)
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @BatchSize(size = 30)
+    private List<Option> options;
 }

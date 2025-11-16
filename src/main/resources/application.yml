@@ -20,4 +20,4 @@ server:
   port: 8080
 
 fast-api:
-  url: ${FASTAPI_APP}
+  url: ${FAST_API_APP}

@@ -127,4 +127,39 @@ public class FastAppUtil {
         }
         return apiResponse;
     }
+
+
+    public List<FastDto.Option> crawlingOption(String goodsNo) {
+
+        // url 설정
+        String url = UriComponentsBuilder
+                .fromHttpUrl(fastUrl + "/crawling/musinsa/options")
+                .queryParam("goods_no", goodsNo)
+                .toUriString();
+
+        // 헤더 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 생성
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(headers);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
+        String jsonBody = responseEntity.getBody();
+
+        List<FastDto.Option> apiResponse = null;
+
+        try {
+            apiResponse = om.readValue(jsonBody, new TypeReference<>() {});
+
+            if (apiResponse == null) {
+                log.error("FastAPI 요청 실패 응답 Body: {}", jsonBody);
+                throw new RuntimeException("FastAPI 요청이 성공했으나, 무신사-화장품 크롤링 실패.");
+            }
+
+        } catch (Exception e) {
+            log.error("FastAPI 응답 JSON 파싱에 실패했습니다. Body: {}", jsonBody, e);
+            throw new RuntimeException("FastAPI 응답 파싱 실패", e);
+        }
+        return apiResponse;
+    }
 }

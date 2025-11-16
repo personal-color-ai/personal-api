@@ -8,6 +8,7 @@ import org.cn.personalapi.infra.FastDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +17,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
+    private final OptionRepository optionRepository;
     private final FastAppUtil fastAppUtil;
 
     public List<Product> getProducts(Long memberId) {
@@ -91,4 +93,29 @@ public class ProductService {
         }
     }
 
+    @Transactional
+    public void crawlingOptions() {
+        List<Product> products = productRepository.findAll();
+        List<Option> optionEntities = new ArrayList<>();
+
+        for (Product product : products) {
+            if (!product.getOptions().isEmpty()) continue;
+
+            List<FastDto.Option> options = fastAppUtil.crawlingOption(product.getGoodsId());
+
+            List<Option> entity = options.stream().map(option -> {
+                return Option.builder()
+                        .product(product)
+                        .name(option.name())
+                        .imageUrl(option.imageUrl())
+                        .optionNo(option.optionNo())
+                        .build();
+            }).toList();
+            optionEntities.addAll(entity);
+        }
+
+        if (optionEntities.isEmpty()) return;
+
+        optionRepository.saveAll(optionEntities);
+    }
 }

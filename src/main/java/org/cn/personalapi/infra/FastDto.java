@@ -103,4 +103,53 @@ public class FastDto {
             Boolean myReview
     ) {}
 
+
+    public record Option(
+
+            @JsonProperty("group_no")
+            String groupNo,
+
+            @JsonProperty("group_name")
+            String groupName,
+
+            @JsonProperty("group_type")
+            String groupType,
+
+            @JsonProperty("display_type")
+            String displayType,
+
+            @JsonProperty("value_no")
+            String valueNo,
+
+            @JsonProperty("option_no")
+            String optionNo,
+
+            @JsonProperty("name")
+            String name,
+
+            @JsonProperty("code")
+            String code,
+
+            @JsonProperty("sequence")
+            String sequence,
+
+            @JsonProperty("color_code")
+            String colorCode,
+
+            @JsonProperty("color_type")
+            String colorType,
+
+            @JsonProperty("image_url")
+            String imageUrl,
+
+            @JsonProperty("is_deleted")
+            Boolean isDeleted,
+
+            @JsonProperty("is_leaf")
+            Boolean isLeaf,
+
+            @JsonProperty("out_of_stock")
+            Boolean outOfStock
+    ) {}
+
 }
