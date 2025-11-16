@@ -30,6 +30,7 @@ public class ProductConvertor {
                 product.getImageUrl(),
                 product.getFeatures(),
                 // 리뷰
+                product.getUrl(),
                 product.getReviews().size(),
                 countReviewsByRating(product, 1),
                 countReviewsByRating(product, 2),

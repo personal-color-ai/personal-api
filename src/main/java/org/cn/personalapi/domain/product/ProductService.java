@@ -56,6 +56,7 @@ public class ProductService {
                     .price(beauty.finalPrice())
                     .rating(beauty.reviewScore() != null ? beauty.reviewScore().doubleValue() : 0.0)
                     .reviewCount(beauty.reviewCount() != null ? beauty.reviewCount() : 0)
+                    .url(beauty.productUrl())
                     .imageUrl(beauty.imageUrl())
                     .build();
         }).toList();

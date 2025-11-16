@@ -17,6 +17,7 @@ public class ProductDto {
         String description,
         Double rating,
         Integer price,
+        String originUrl,
         String imageUrl,
         String features,
         Integer reviewCountAll,

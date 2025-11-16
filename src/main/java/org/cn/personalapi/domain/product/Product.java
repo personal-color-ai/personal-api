@@ -23,8 +23,7 @@ public class Product extends AuditingEntity {
     private Integer price;       // 14000
     private Double rating;       // 4.8
     private Integer reviewCount; // 256
-//    private String colorName;    // 01 페어리 핑크
-//    private String badge;        // Good
+    private String url;         // 무신사 상품 URL
     private String imageUrl;     // 대표 이미지 URL
     @Lob
     @Basic(fetch = FetchType.LAZY)
