@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,6 @@ public class ProductService {
 
     public List<Product> getProducts(Long memberId) {
         // TODO 추천 로직으로 변경 필요
-        // python 에서 추천 로직? 이거 지피티 찾아보기
         return productRepository.findAll();
     }
 
@@ -45,83 +45,79 @@ public class ProductService {
 
     @Transactional
     public void crawlingFashion() {
-        List<FastDto.Fashion> fashions = fastAppUtil.crawlingFashion();
+        // TODO 패션 크롤링 구현 필요
     }
 
     @Transactional
     public void crawlingBeauty() {
         List<FastDto.Beauty> beautyList = fastAppUtil.crawlingBeauty();
 
-        List<Product> products = beautyList.stream().map(beauty -> {
-            if (productRepository.findByGoodsId(beauty.productId()).isPresent()) {
-                return null;
-            }
+        List<Product> products = beautyList.stream()
+                .filter(beauty -> productRepository.findByGoodsId(beauty.productId()).isEmpty()) // 중복 제거
+                .map(beauty -> Product.builder()
+                        .goodsId(beauty.productId())
+                        .name(beauty.name())
+                        .brand(beauty.brand())
+                        .price(beauty.finalPrice())
+                        .rating(beauty.reviewScore() != null ? beauty.reviewScore().doubleValue() : 0.0)
+                        .reviewCount(beauty.reviewCount() != null ? beauty.reviewCount() : 0)
+                        .url(beauty.productUrl())
+                        .imageUrl(beauty.imageUrl())
+                        .build())
+                .toList();
 
-            return Product.builder()
-                    .goodsId(beauty.productId())
-                    .name(beauty.name())
-                    .brand(beauty.brand())
-                    .price(beauty.finalPrice())
-                    .rating(beauty.reviewScore() != null ? beauty.reviewScore().doubleValue() : 0.0)
-                    .reviewCount(beauty.reviewCount() != null ? beauty.reviewCount() : 0)
-                    .url(beauty.productUrl())
-                    .imageUrl(beauty.imageUrl())
-                    .build();
-        }).toList();
-
-        if (products.isEmpty()) return;
-
-        productRepository.saveAll(products);
+        saveEntities(products, productRepository::saveAll);
     }
 
     @Transactional
     public void crawlingReview() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAll().stream()
+                .filter(product -> product.getReviews().isEmpty()) // 리뷰가 없는 상품만 필터링
+                .toList();
 
-        for (Product product : products) {
-            if (!product.getReviews().isEmpty()) continue;
-
+        products.forEach(product -> {
             List<FastDto.Review> reviews = fastAppUtil.crawlingReview(product.getGoodsId());
+            List<Review> reviewEntities = reviews.stream()
+                    .map(review -> Review.builder()
+                            .product(product)
+                            .userName(review.userName())
+                            .userDescription(review.userProfile())
+                            .userImage(review.userImage())
+                            .rating(Integer.valueOf(review.grade()))
+                            .likes(review.likeCount())
+                            .content(review.content())
+                            .build())
+                    .toList();
 
-            List<Review> reviewEntities = reviews.stream().map(review -> {
-                return Review.builder()
-                        .product(product)
-                        .userName(review.userName())
-                        .userDescription(review.userProfile())
-                        .userImage(review.userImage())
-                        .rating(Integer.valueOf(review.grade()))
-                        .likes(review.likeCount())
-                        .content(review.content())
-                        .build();
-            }).toList();
-
-            reviewRepository.saveAll(reviewEntities);
-        }
+            saveEntities(reviewEntities, reviewRepository::saveAll);
+        });
     }
 
     @Transactional
     public void crawlingOptions() {
-        List<Product> products = productRepository.findAll();
-        List<Option> optionEntities = new ArrayList<>();
+        List<Product> products = productRepository.findAll().stream()
+                .filter(product -> product.getOptions().isEmpty()) // 옵션이 없는 상품만 필터링
+                .toList();
 
-        for (Product product : products) {
-            if (!product.getOptions().isEmpty()) continue;
+        products.forEach(product -> {
+            List<Option> options = fastAppUtil.crawlingOption(product.getGoodsId()).stream()
+                    .map(option -> Option.builder()
+                            .product(product)
+                            .name(option.name())
+                            .imageUrl(option.imageUrl())
+                            .optionNo(option.optionNo())
+                            .build())
+                    .toList();
 
-            List<FastDto.Option> options = fastAppUtil.crawlingOption(product.getGoodsId());
+            optionRepository.saveAll(options); // 바로 저장
+        });
+    }
 
-            List<Option> entity = options.stream().map(option -> {
-                return Option.builder()
-                        .product(product)
-                        .name(option.name())
-                        .imageUrl(option.imageUrl())
-                        .optionNo(option.optionNo())
-                        .build();
-            }).toList();
-            optionEntities.addAll(entity);
+
+    // 공통 저장 메서드
+    private <T> void saveEntities(List<T> entities, Consumer<List<T>> saveFunction) {
+        if (!entities.isEmpty()) {
+            saveFunction.accept(entities);
         }
-
-        if (optionEntities.isEmpty()) return;
-
-        optionRepository.saveAll(optionEntities);
     }
 }

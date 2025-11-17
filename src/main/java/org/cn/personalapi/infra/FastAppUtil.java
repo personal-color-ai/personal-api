@@ -40,7 +40,7 @@ public class FastAppUtil {
 
         // 요청 생성
         HttpEntity<Map<String, String>> request = new HttpEntity<>(headers);
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String jsonBody = responseEntity.getBody();
 
         List<FastDto.Fashion> apiResponse = null;
@@ -73,7 +73,7 @@ public class FastAppUtil {
 
         // 요청 생성
         HttpEntity<Map<String, String>> request = new HttpEntity<>(headers);
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String jsonBody = responseEntity.getBody();
 
         List<FastDto.Beauty> apiResponse = null;
@@ -108,7 +108,7 @@ public class FastAppUtil {
 
         // 요청 생성
         HttpEntity<Map<String, String>> request = new HttpEntity<>(headers);
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String jsonBody = responseEntity.getBody();
 
         List<FastDto.Review> apiResponse = null;
