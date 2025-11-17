@@ -1,8 +1,14 @@
-package org.cn.personalapi.domain.product;
+package org.cn.personalapi.domain.product.service;
 
 import lombok.RequiredArgsConstructor;
-import org.cn.personalapi.domain.review.Review;
-import org.cn.personalapi.domain.review.ReviewRepository;
+import org.cn.personalapi.domain.product.presentation.ProductConvertor;
+import org.cn.personalapi.domain.product.presentation.ProductDto;
+import org.cn.personalapi.domain.product.domain.Option;
+import org.cn.personalapi.domain.product.domain.Product;
+import org.cn.personalapi.domain.product.repository.OptionRepository;
+import org.cn.personalapi.domain.product.repository.ProductRepository;
+import org.cn.personalapi.domain.review.domain.Review;
+import org.cn.personalapi.domain.review.domain.ReviewRepository;
 import org.cn.personalapi.infra.FastAppUtil;
 import org.cn.personalapi.infra.FastDto;
 import org.springframework.stereotype.Service;

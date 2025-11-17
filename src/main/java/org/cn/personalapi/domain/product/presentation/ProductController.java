@@ -1,10 +1,11 @@
-package org.cn.personalapi.domain.product;
+package org.cn.personalapi.domain.product.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
-import org.cn.personalapi.domain.review.ReviewConvertor;
-import org.cn.personalapi.domain.review.ReviewDto;
+import org.cn.personalapi.domain.product.service.ProductService;
+import org.cn.personalapi.domain.review.presentation.ReviewConvertor;
+import org.cn.personalapi.domain.review.presentation.ReviewDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,38 +45,4 @@ public class ProductController {
                 .body(ReviewConvertor.toListRes(productService.getReviewByProduct(id)));
     }
 
-    @Operation(summary = "패션 크롤링 테스트용 엔드포인트", description = "패션 크롤링 엔드포인트입니다.")
-    @PostMapping("/crawling-fashion")
-    public ResponseEntity<String> crawlingFashion() {
-        return ResponseEntity.ok()
-                .body("미완");
-    }
-
-    @Operation(summary = "뷰티 크롤링 테스트용 엔드포인트", description = "뷰티 크롤링 엔드포인트입니다.")
-    @PostMapping("/crawling-beauty")
-    public ResponseEntity<String> crawlingBeauty() {
-        productService.crawlingBeauty();
-        return ResponseEntity.ok()
-                .body("뷰티 크롤링 성공");
-    }
-
-    @Operation(summary = "뷰티-리뷰 크롤링 테스트용 엔드포인트", description = "뷰티-리뷰 크롤링 엔드포인트입니다.")
-    @PostMapping("/crawling-beauty-review")
-    public ResponseEntity<String> crawlingReview(
-            ProductDto.ReviewReq request
-    ) {
-        productService.crawlingReview();
-        return ResponseEntity.ok()
-                .body("뷰티-리뷰 크롤링 성공");
-    }
-
-    @Operation(summary = "뷰티-옵션 크롤링 테스트용 엔드포인트", description = "뷰티-옵션 크롤링 엔드포인트입니다.")
-    @PostMapping("/crawling-beauty-option")
-    public ResponseEntity<String> crawlingOptions(
-            ProductDto.ReviewReq request
-    ) {
-        productService.crawlingOptions();
-        return ResponseEntity.ok()
-                .body("뷰티-옵션 크롤링 성공");
-    }
 }

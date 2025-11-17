@@ -1,6 +1,6 @@
-package org.cn.personalapi.domain.review;
+package org.cn.personalapi.domain.review.presentation;
 
-import org.cn.personalapi.domain.user.UserDto;
+import org.cn.personalapi.domain.review.domain.Review;
 
 import java.util.List;
 

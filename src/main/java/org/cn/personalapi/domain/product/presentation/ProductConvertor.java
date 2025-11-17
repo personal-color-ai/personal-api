@@ -1,4 +1,7 @@
-package org.cn.personalapi.domain.product;
+package org.cn.personalapi.domain.product.presentation;
+
+import org.cn.personalapi.domain.product.domain.Option;
+import org.cn.personalapi.domain.product.domain.Product;
 
 import java.util.ArrayList;
 import java.util.List;

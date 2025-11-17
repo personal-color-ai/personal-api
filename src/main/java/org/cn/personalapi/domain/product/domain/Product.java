@@ -1,8 +1,9 @@
-package org.cn.personalapi.domain.product;
+package org.cn.personalapi.domain.product.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.cn.personalapi.domain.review.Review;
+import org.cn.personalapi.domain.product.domain.Option;
+import org.cn.personalapi.domain.review.domain.Review;
 import org.cn.personalapi.global.AuditingEntity;
 import org.hibernate.annotations.BatchSize;
 

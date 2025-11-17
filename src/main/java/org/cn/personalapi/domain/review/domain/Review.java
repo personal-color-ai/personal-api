@@ -1,12 +1,11 @@
-package org.cn.personalapi.domain.review;
+package org.cn.personalapi.domain.review.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.cn.personalapi.domain.product.Product;
-import org.cn.personalapi.domain.user.User;
+import org.cn.personalapi.domain.product.domain.Product;
 import org.cn.personalapi.global.AuditingEntity;
 
 @Entity

@@ -1,5 +1,6 @@
-package org.cn.personalapi.domain.product;
+package org.cn.personalapi.domain.product.repository;
 
+import org.cn.personalapi.domain.product.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

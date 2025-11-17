@@ -1,4 +1,7 @@
-package org.cn.personalapi.domain.user;
+package org.cn.personalapi.domain.user.presentation;
+
+import org.cn.personalapi.domain.user.domain.PersonalType;
+import org.cn.personalapi.domain.user.domain.User;
 
 public class UserDto {
 

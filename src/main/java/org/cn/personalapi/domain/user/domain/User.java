@@ -1,4 +1,4 @@
-package org.cn.personalapi.domain.user;
+package org.cn.personalapi.domain.user.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

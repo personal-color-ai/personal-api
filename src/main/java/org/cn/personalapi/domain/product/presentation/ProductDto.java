@@ -1,4 +1,4 @@
-package org.cn.personalapi.domain.product;
+package org.cn.personalapi.domain.product.presentation;
 
 import java.util.List;
 

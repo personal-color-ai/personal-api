@@ -1,8 +1,6 @@
-package org.cn.personalapi.domain.review;
+package org.cn.personalapi.domain.review.presentation;
 
 import lombok.Builder;
-import org.cn.personalapi.domain.user.PersonalType;
-import org.cn.personalapi.domain.user.UserDto;
 
 import java.time.LocalDateTime;
 
