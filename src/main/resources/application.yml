@@ -4,7 +4,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_HOST}/personal
+    url: jdbc:${MYSQL_HOST:mysql}/personal
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
 
