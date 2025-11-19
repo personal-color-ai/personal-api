@@ -14,6 +14,7 @@ import org.cn.personalapi.domain.review.domain.ReviewRepository;
 import org.cn.personalapi.infra.FastAppUtil;
 import org.cn.personalapi.infra.FastDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +34,9 @@ public class ProductService {
 
     // 전체 조회 -> 페이징 조회로 변경 [Critical B 해결]
     @Transactional(readOnly = true)
-    public Page<Product> getProducts(Long memberId, Pageable pageable) {
+    public Page<Product> getProducts(Long memberId, Integer page, Integer size) {
         // TODO 추천 로직으로 변경 필요
-        return productRepository.findAll(pageable);
+        return productRepository.findAll(PageRequest.of(page, size));
     }
 
     @Transactional(readOnly = true)
