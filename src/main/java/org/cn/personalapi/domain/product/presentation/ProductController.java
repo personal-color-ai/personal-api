@@ -1,3 +1,5 @@
+// src/main/java/org/cn/personalapi/domain/product/presentation/ProductController.java
+
 package org.cn.personalapi.domain.product.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -6,6 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.cn.personalapi.domain.product.service.ProductService;
 import org.cn.personalapi.domain.review.presentation.ReviewConvertor;
 import org.cn.personalapi.domain.review.presentation.ReviewDto;
+import org.cn.personalapi.global.PageDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,11 +26,14 @@ public class ProductController {
 
     @Operation(summary = "fitting - 추천상품 리스트 조회", description = "퍼스널컬러별 추천 상품 목록을 조회합니다.")
     @GetMapping("")
-    public ResponseEntity<List<ProductDto.ListRes>> getProducts(
+    public ResponseEntity<PageDto.Dto> getProducts(
             @Parameter(description = "로그인 사용자의 ID", example = "1")
-            @RequestParam(value = "member-id")  Long memberId) {
+            @RequestParam(value = "member-id") Long memberId,
+            @Parameter(description = "페이징 정보")
+            @PageableDefault(size = 20) Pageable pageable) { // Pageable 추가
+
         return ResponseEntity.ok()
-                .body(ProductConvertor.toListResList(productService.getProducts(memberId)));
+                .body(ProductConvertor.toPageListRes(productService.getProducts(memberId, pageable)));
     }
 
     @Operation(summary = "fitting - 추천상품 상세 조회", description = "상품의 상세 정보를 조회합니다.")
