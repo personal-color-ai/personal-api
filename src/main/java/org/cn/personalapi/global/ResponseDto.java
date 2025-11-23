@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+import org.cn.personalapi.domain.report.dto.response.PersonalColorReportDto;
 import org.springframework.http.HttpStatus;
 
 @JsonPropertyOrder({"status", "message", "result"})
@@ -16,4 +17,11 @@ public class ResponseDto<T> {
     @Schema(example = "오류 메시지")
     private String message;
     private T result;
+
+    public static ResponseDto<Object> success(PersonalColorReportDto report) {
+        return ResponseDto.builder()
+            .status(HttpStatus.OK)
+            .result(report)
+            .build();
+    }
 }

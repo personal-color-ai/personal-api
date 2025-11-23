@@ -2,6 +2,8 @@ package org.cn.personalapi.infra;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,15 +15,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
-import java.util.Map;
-
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class FastAppUtil {
 
-    @Value("${fast-api.url}")
+    @Value("${service.fast-api.url}")
     private String fastUrl;
 
     private final RestTemplate restTemplate;
@@ -31,8 +30,8 @@ public class FastAppUtil {
 
         // url 설정
         String url = UriComponentsBuilder
-                .fromHttpUrl(fastUrl + "/crawling/musinsa/ranking/all")
-                .toUriString();
+            .fromHttpUrl(fastUrl + "/crawling/musinsa/ranking/all")
+            .toUriString();
 
         // 헤더 생성
         HttpHeaders headers = new HttpHeaders();
@@ -46,7 +45,8 @@ public class FastAppUtil {
         List<FastDto.Fashion> apiResponse = null;
 
         try {
-            apiResponse = om.readValue(jsonBody, new TypeReference<>() {});
+            apiResponse = om.readValue(jsonBody, new TypeReference<>() {
+            });
 
             if (apiResponse == null) {
                 log.error("FastAPI 요청 실패 응답 Body: {}", jsonBody);
@@ -64,8 +64,8 @@ public class FastAppUtil {
 
         // url 설정
         String url = UriComponentsBuilder
-                .fromHttpUrl(fastUrl + "/crawling/musinsa/beauty")
-                .toUriString();
+            .fromHttpUrl(fastUrl + "/crawling/musinsa/beauty")
+            .toUriString();
 
         // 헤더 생성
         HttpHeaders headers = new HttpHeaders();
@@ -79,7 +79,8 @@ public class FastAppUtil {
         List<FastDto.Beauty> apiResponse = null;
 
         try {
-            apiResponse = om.readValue(jsonBody, new TypeReference<>() {});
+            apiResponse = om.readValue(jsonBody, new TypeReference<>() {
+            });
 
             if (apiResponse == null) {
                 log.error("FastAPI 요청 실패 응답 Body: {}", jsonBody);
@@ -98,9 +99,9 @@ public class FastAppUtil {
 
         // url 설정
         String url = UriComponentsBuilder
-                .fromHttpUrl(fastUrl + "/crawling/musinsa/reviews")
-                .queryParam("goods_no", goodsNo)
-                .toUriString();
+            .fromHttpUrl(fastUrl + "/crawling/musinsa/reviews")
+            .queryParam("goods_no", goodsNo)
+            .toUriString();
 
         // 헤더 생성
         HttpHeaders headers = new HttpHeaders();
@@ -114,7 +115,8 @@ public class FastAppUtil {
         List<FastDto.Review> apiResponse = null;
 
         try {
-            apiResponse = om.readValue(jsonBody, new TypeReference<>() {});
+            apiResponse = om.readValue(jsonBody, new TypeReference<>() {
+            });
 
             if (apiResponse == null) {
                 log.error("FastAPI 요청 실패 응답 Body: {}", jsonBody);
@@ -133,9 +135,9 @@ public class FastAppUtil {
 
         // url 설정
         String url = UriComponentsBuilder
-                .fromHttpUrl(fastUrl + "/crawling/musinsa/options")
-                .queryParam("goods_no", goodsNo)
-                .toUriString();
+            .fromHttpUrl(fastUrl + "/crawling/musinsa/options")
+            .queryParam("goods_no", goodsNo)
+            .toUriString();
 
         // 헤더 생성
         HttpHeaders headers = new HttpHeaders();
@@ -149,7 +151,8 @@ public class FastAppUtil {
         List<FastDto.Option> apiResponse = null;
 
         try {
-            apiResponse = om.readValue(jsonBody, new TypeReference<>() {});
+            apiResponse = om.readValue(jsonBody, new TypeReference<>() {
+            });
 
             if (apiResponse == null) {
                 log.error("FastAPI 요청 실패 응답 Body: {}", jsonBody);
