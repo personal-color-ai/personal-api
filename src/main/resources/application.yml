@@ -16,8 +16,14 @@ spring:
         globally_quoted_identifiers: true
         dialect: org.hibernate.dialect.MySQLDialect
 
+
+service:
+  fast-api:
+    url: ${FAST_API_APP}
+  llm-api:
+    url: ${LLM-API-URL}
+    key: ${LLM-API-KEY}
 server:
   port: 8080
 
-fast-api:
-  url: ${FAST_API_APP}
+
