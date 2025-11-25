@@ -47,6 +47,8 @@ jobs:
       
             echo "LLM_API_URL=${{ secrets.LLM_API_URL }}" | sudo tee -a .env
             echo "LLM_API_KEY=${{ secrets.LLM_API_KEY }}" | sudo tee -a .env
+
+            echo "FAST_API_APP=${{ secrets.FAST_API_APP }}" | sudo tee -a .env
       
             echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" | sudo tee -a .env
             echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" | sudo tee -a .env
