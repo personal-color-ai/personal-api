@@ -1,8 +1,8 @@
 package org.cn.personalapi.domain.product.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Getter;
 import org.cn.personalapi.domain.product.domain.Product;
 import org.cn.personalapi.domain.review.domain.Review;
 
@@ -54,5 +54,28 @@ public class EmbedDto {
         int processedProductsCount,
         @JsonProperty("total_embedded_reviews")
         int totalEmbeddedReviews
+    ) {}
+
+    // 검색 요청 DTO
+    public record SearchReq(
+            @JsonProperty("personal_color")
+            String personalColor,
+            String prompt
+    ) {}
+
+    // 검색 응답 DTO
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record SearchRes(
+            List<SearchResultItem> results
+    ) {}
+
+    // 검색 결과 아이템 DTO
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record SearchResultItem(
+            @JsonProperty("product_id")
+            Long productId,
+
+            @JsonProperty("similarity_distance")
+            Double similarityDistance
     ) {}
 }

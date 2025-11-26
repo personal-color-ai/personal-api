@@ -2,6 +2,8 @@ package org.cn.personalapi.infra;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -173,5 +175,46 @@ public class FastAppUtil {
             log.info("FastAPI 임베딩 API 호출 총 소요 시간: {}ms", (endTime - startTime));
         }
         return apiResponse;
+    }
+
+    // 상품 검색 요청
+    public List<Long> searchProducts(String personalColor, String prompt) {
+        long startTime = System.currentTimeMillis();
+
+        // url 설정 (파이썬 api 경로)
+        String url = UriComponentsBuilder
+                .fromUriString(fastUrl + "/embedding/search")
+                .toUriString();
+
+        // 헤더 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 바디 생성
+        EmbedDto.SearchReq req = new EmbedDto.SearchReq(personalColor, prompt);
+        HttpEntity<EmbedDto.SearchReq> request = new HttpEntity<>(req, headers);
+
+        try {
+            ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
+            String jsonBody = responseEntity.getBody();
+
+            EmbedDto.SearchRes apiResponse = om.readValue(jsonBody, EmbedDto.SearchRes.class);
+
+            if (apiResponse == null || apiResponse.results() == null) {
+                return Collections.emptyList();
+            }
+
+            // 결과에서 Product ID만 추출하여 반환
+            return apiResponse.results().stream()
+                    .map(EmbedDto.SearchResultItem::productId)
+                    .toList();
+
+        } catch (Exception e) {
+            log.error("FastAPI 검색 요청 실패. Prompt: {}, Error: {}", prompt, e.getMessage());
+            // 검색 실패 시 빈 리스트 반환 (또는 예외를 던져서 상위에서 처리)
+            return Collections.emptyList();
+        } finally {
+            log.info("FastAPI 검색 소요 시간: {}ms", (System.currentTimeMillis() - startTime));
+        }
     }
 }
