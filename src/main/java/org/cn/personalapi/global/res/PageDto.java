@@ -1,4 +1,4 @@
-package org.cn.personalapi.global;
+package org.cn.personalapi.global.res;
 
 import lombok.Builder;
 

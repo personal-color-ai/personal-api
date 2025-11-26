@@ -1,4 +1,4 @@
-package org.cn.personalapi.global;
+package org.cn.personalapi.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

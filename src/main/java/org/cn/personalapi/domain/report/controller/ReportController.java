@@ -3,11 +3,9 @@ package org.cn.personalapi.domain.report.controller;
 import lombok.RequiredArgsConstructor;
 import org.cn.personalapi.domain.report.dto.response.PersonalColorReportDto;
 import org.cn.personalapi.domain.report.service.ReportService;
-import org.cn.personalapi.global.ResponseDto;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.cn.personalapi.global.res.ResponseDto;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -17,9 +15,9 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseDto<?> getReport(
-        @RequestPart(value = "file") MultipartFile imageFile
+        @RequestParam(value = "file") MultipartFile imageFile
     ) {
         PersonalColorReportDto report = reportService.getReport(imageFile);
         return ResponseDto.success(report);

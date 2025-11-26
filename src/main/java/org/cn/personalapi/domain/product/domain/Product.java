@@ -2,9 +2,8 @@ package org.cn.personalapi.domain.product.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.cn.personalapi.domain.product.domain.Option;
 import org.cn.personalapi.domain.review.domain.Review;
-import org.cn.personalapi.global.AuditingEntity;
+import org.cn.personalapi.global.res.AuditingEntity;
 import org.hibernate.annotations.BatchSize;
 
 import java.util.List;
@@ -33,6 +32,8 @@ public class Product extends AuditingEntity {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private String features;     // 주요 특징 (문장 전체 저장)
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     @BatchSize(size = 10)

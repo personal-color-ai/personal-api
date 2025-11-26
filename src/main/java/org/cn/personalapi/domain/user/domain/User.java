@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.cn.personalapi.global.AuditingEntity;
+import org.cn.personalapi.global.res.AuditingEntity;
 
 @Entity
 @Table(name = "user")

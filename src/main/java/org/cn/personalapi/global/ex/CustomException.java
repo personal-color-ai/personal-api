@@ -1,4 +1,4 @@
-package org.cn.personalapi.global;
+package org.cn.personalapi.global.ex;
 
 public class CustomException extends RuntimeException {
     public CustomException(String message) {

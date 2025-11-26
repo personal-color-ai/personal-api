@@ -1,6 +1,7 @@
-package org.cn.personalapi.global;
+package org.cn.personalapi.global.ex;
 
 import lombok.extern.slf4j.Slf4j;
+import org.cn.personalapi.global.res.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
