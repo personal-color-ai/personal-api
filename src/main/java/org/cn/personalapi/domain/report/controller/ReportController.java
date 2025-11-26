@@ -3,7 +3,7 @@ package org.cn.personalapi.domain.report.controller;
 import lombok.RequiredArgsConstructor;
 import org.cn.personalapi.domain.report.dto.response.PersonalColorReportDto;
 import org.cn.personalapi.domain.report.service.ReportService;
-import org.cn.personalapi.global.ResponseDto;
+import org.cn.personalapi.global.res.ResponseDto;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.cn.personalapi.domain.product.service.ProductService;
 import org.cn.personalapi.domain.review.presentation.ReviewConvertor;
-import org.cn.personalapi.global.ResponseDto;
+import org.cn.personalapi.global.res.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

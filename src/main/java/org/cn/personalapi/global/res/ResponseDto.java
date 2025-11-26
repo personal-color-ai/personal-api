@@ -1,4 +1,4 @@
-package org.cn.personalapi.global;
+package org.cn.personalapi.global.res;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;

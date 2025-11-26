@@ -1,4 +1,4 @@
-package org.cn.personalapi.global;
+package org.cn.personalapi.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.cn.personalapi.domain.product.domain.Product;
-import org.cn.personalapi.global.AuditingEntity;
+import org.cn.personalapi.global.res.AuditingEntity;
 
 @Entity
 @Table(name = "review")

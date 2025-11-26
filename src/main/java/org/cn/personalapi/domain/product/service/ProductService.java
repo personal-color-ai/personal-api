@@ -15,7 +15,7 @@ import org.cn.personalapi.domain.review.domain.Review;
 import org.cn.personalapi.domain.review.domain.ReviewRepository;
 import org.cn.personalapi.domain.user.domain.User;
 import org.cn.personalapi.domain.user.repository.UserRepository;
-import org.cn.personalapi.global.CustomException;
+import org.cn.personalapi.global.ex.CustomException;
 import org.cn.personalapi.infra.FastAppUtil;
 import org.cn.personalapi.infra.FastDto;
 import org.springframework.data.domain.Page;
