@@ -16,6 +16,7 @@ public class EmbedDto {
             String brand,
             Double rating,
             Integer reviewCountAll,
+            String category,
             List<ReviewDTO> review
     ) {
         public static ProductDTO toDto(Product product) {
@@ -25,6 +26,7 @@ public class EmbedDto {
                     .brand(product.getBrand())
                     .rating(product.getRating())
                     .reviewCountAll(product.getReviewCount())
+                    .category(product.getCategory().name()) // [추가] "BASE", "LIP" 등으로 변환
                     .review(product.getReviews().stream().map(ReviewDTO::toDto).toList())
                     .build();
         }

@@ -37,16 +37,16 @@ public class FastAppUtil {
 
         // url 설정
         String url = UriComponentsBuilder
-            .fromUriString(fastUrl + "/crawling/musinsa/beauty")
-            .toUriString();
+                .fromUriString(fastUrl + "/crawling/musinsa/beauty")
+                .queryParam("category", dto.category().getCode()) // 값 명시
+                .queryParam("page", 1)
+                .queryParam("size", 60)
+                .toUriString();
 
-        // 헤더 생성
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // 요청 생성
-        CrawlingDto.FastBeautyReq req = new CrawlingDto.FastBeautyReq(dto.category().getCode());
-        HttpEntity<CrawlingDto.FastBeautyReq> request = new HttpEntity<>(req, headers);
+        HttpEntity<Void> request = new HttpEntity<>(headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String jsonBody = responseEntity.getBody();
 
