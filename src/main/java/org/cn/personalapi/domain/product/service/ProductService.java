@@ -2,30 +2,25 @@ package org.cn.personalapi.domain.product.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.cn.personalapi.domain.product.dto.CrawlingDto;
-import org.cn.personalapi.domain.product.dto.ProductScoreDto;
-import org.cn.personalapi.domain.product.presentation.ProductConvertor;
-import org.cn.personalapi.domain.product.dto.ProductDto;
 import org.cn.personalapi.domain.product.domain.Option;
 import org.cn.personalapi.domain.product.domain.Product;
+import org.cn.personalapi.domain.product.dto.CrawlingDto;
+import org.cn.personalapi.domain.product.dto.ProductDto;
+import org.cn.personalapi.domain.product.presentation.ProductConvertor;
 import org.cn.personalapi.domain.product.repository.OptionRepository;
 import org.cn.personalapi.domain.product.repository.ProductRepository;
 import org.cn.personalapi.domain.review.domain.Review;
 import org.cn.personalapi.domain.review.domain.ReviewRepository;
-import org.cn.personalapi.domain.user.domain.PersonalType;
 import org.cn.personalapi.domain.user.domain.User;
 import org.cn.personalapi.domain.user.repository.UserRepository;
 import org.cn.personalapi.global.CustomException;
 import org.cn.personalapi.infra.FastAppUtil;
 import org.cn.personalapi.infra.FastDto;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,49 +37,28 @@ public class ProductService {
     private final FastAppUtil fastAppUtil;
 
     // 전체 조회 -> 페이징 조회로 변경 [Critical B 해결]
-    @Transactional(readOnly = true)
     public Page<Product> getProducts(Long memberId, Integer page, Integer size) {
         User user = userRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException("사용자를 찾을 수 없습니다. member ID: " + memberId));
-        PersonalType personalType = user.getPersonalType();
+                .orElseThrow(() -> new CustomException("사용자를 찾을 수 없습니다."));
+        String searchKeyword = "%" + user.getPersonalType().getValue() + "%"; // keyword 통일
 
-        List<Product> allProducts = productRepository.findAll();
-        List<Review> allReviews = reviewRepository.findAll();
+        // 1. 전체 평균(C) 계산
+        // 전체 리뷰 수
+        long totalReviews = reviewRepository.count();
+        // 매칭되는 전체 리뷰 수 (count 쿼리 활용)
+        long totalMatchingReviews = reviewRepository.countByUserDescriptionContaining(searchKeyword);
 
-        long totalReviews = allReviews.size();
-        long matchingReviews = allReviews.stream()
-                .filter(review -> review.getUserDescription() != null && review.getUserDescription().contains(personalType.name()))
-                .count();
-
-        double overallAverage = (double) matchingReviews / totalReviews;
-
+        double overallAverage = (totalReviews > 0) ? (double) totalMatchingReviews / totalReviews : 0.0;
         final int MINIMUM_REVIEWS = 5;
 
-        List<Product> sortedProducts = allProducts.stream()
-                .map(product -> {
-                    long productReviewsCount = product.getReviews().size();
-                    long productMatchingReviews = product.getReviews().stream()
-                            .filter(review -> review.getUserDescription() != null && review.getUserDescription().contains(personalType.name()))
-                            .count();
-
-                    double productAverage = (productReviewsCount > 0) ? (double) productMatchingReviews / productReviewsCount : 0;
-                    // 베이지안 평균 적용 : 실제 리뷰수에 따른 가중치
-                    double bayesianScore = ((double) productReviewsCount / (productReviewsCount + MINIMUM_REVIEWS)) * productAverage
-                            + ((double) MINIMUM_REVIEWS / (productReviewsCount + MINIMUM_REVIEWS)) * overallAverage;
-
-                    return new ProductScoreDto(product, bayesianScore);
-                })
-                .sorted(Comparator.comparing(ProductScoreDto::getScore).reversed())
-                .map(ProductScoreDto::getProduct)
-                .collect(Collectors.toList());
-
-        Pageable pageable = PageRequest.of(page, size);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), sortedProducts.size());
-
-        return new PageImpl<>(sortedProducts.subList(start, end), pageable, sortedProducts.size());
+        // 2. DB 레벨에서 베이지안 점수 계산 및 페이징
+        return productRepository.findProductsSortedByBayesianScore(
+                searchKeyword,
+                overallAverage,
+                MINIMUM_REVIEWS,
+                PageRequest.of(page, size)
+        );
     }
-
 
     @Transactional(readOnly = true)
     public ProductDto.DetailRes getProduct(Long id) {
