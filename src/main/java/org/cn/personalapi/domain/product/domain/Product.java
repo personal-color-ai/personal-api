@@ -33,6 +33,8 @@ public class Product extends AuditingEntity {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private String features;     // 주요 특징 (문장 전체 저장)
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     @BatchSize(size = 10)

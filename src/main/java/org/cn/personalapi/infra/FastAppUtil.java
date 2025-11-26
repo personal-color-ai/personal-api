@@ -7,6 +7,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.cn.personalapi.domain.product.dto.CrawlingDto;
+import org.cn.personalapi.domain.product.dto.EmbedDto;
 import org.cn.personalapi.domain.review.domain.ReviewRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -29,45 +30,12 @@ public class FastAppUtil {
     private final RestTemplate restTemplate;
     private final ObjectMapper om;
 
-    public List<FastDto.Fashion> crawlingFashion() {
-
-        // url 설정
-        String url = UriComponentsBuilder
-            .fromHttpUrl(fastUrl + "/crawling/musinsa/ranking/all")
-            .toUriString();
-
-        // 헤더 생성
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // 요청 생성
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(headers);
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
-        String jsonBody = responseEntity.getBody();
-
-        List<FastDto.Fashion> apiResponse = null;
-
-        try {
-            apiResponse = om.readValue(jsonBody, new TypeReference<>() {
-            });
-
-            if (apiResponse == null) {
-                log.error("FastAPI 요청 실패 응답 Body: {}", jsonBody);
-                throw new RuntimeException("FastAPI 요청이 성공했으나, 무신사-패션 크롤링 실패.");
-            }
-
-        } catch (Exception e) {
-            log.error("FastAPI 응답 JSON 파싱에 실패했습니다. Body: {}", jsonBody, e);
-            throw new RuntimeException("FastAPI 응답 파싱 실패", e);
-        }
-        return apiResponse;
-    }
 
     public List<FastDto.Beauty> crawlingBeauty(CrawlingDto.BeautyReq dto) {
 
         // url 설정
         String url = UriComponentsBuilder
-            .fromHttpUrl(fastUrl + "/crawling/musinsa/beauty")
+            .fromUriString(fastUrl + "/crawling/musinsa/beauty")
             .toUriString();
 
         // 헤더 생성
@@ -80,7 +48,7 @@ public class FastAppUtil {
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String jsonBody = responseEntity.getBody();
 
-        List<FastDto.Beauty> apiResponse = null;
+        List<FastDto.Beauty> apiResponse;
 
         try {
             apiResponse = om.readValue(jsonBody, new TypeReference<>() {
@@ -103,7 +71,7 @@ public class FastAppUtil {
 
         // url 설정
         String url = UriComponentsBuilder
-            .fromHttpUrl(fastUrl + "/crawling/musinsa/reviews")
+            .fromUriString(fastUrl + "/crawling/musinsa/reviews")
             .queryParam("goods_no", goodsNo)
             .toUriString();
 
@@ -116,7 +84,7 @@ public class FastAppUtil {
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String jsonBody = responseEntity.getBody();
 
-        List<FastDto.Review> apiResponse = null;
+        List<FastDto.Review> apiResponse;
 
         try {
             apiResponse = om.readValue(jsonBody, new TypeReference<>() {
@@ -139,7 +107,7 @@ public class FastAppUtil {
 
         // url 설정
         String url = UriComponentsBuilder
-            .fromHttpUrl(fastUrl + "/crawling/musinsa/options")
+            .fromUriString(fastUrl + "/crawling/musinsa/options")
             .queryParam("goods_no", goodsNo)
             .toUriString();
 
@@ -152,7 +120,7 @@ public class FastAppUtil {
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String jsonBody = responseEntity.getBody();
 
-        List<FastDto.Option> apiResponse = null;
+        List<FastDto.Option> apiResponse;
 
         try {
             apiResponse = om.readValue(jsonBody, new TypeReference<>() {
@@ -166,6 +134,43 @@ public class FastAppUtil {
         } catch (Exception e) {
             log.error("FastAPI 응답 JSON 파싱에 실패했습니다. Body: {}", jsonBody, e);
             throw new RuntimeException("FastAPI 응답 파싱 실패", e);
+        }
+        return apiResponse;
+    }
+
+    public EmbedDto.FastEmbeddingResponse embedBeauty(List<EmbedDto.ProductDTO> dto) {
+        long startTime = System.currentTimeMillis();
+
+        // url 설정
+        String url = UriComponentsBuilder
+                .fromUriString(fastUrl + "/embedding")
+                .toUriString();
+
+        // 헤더 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 요청 생성
+        HttpEntity<List<EmbedDto.ProductDTO>> request = new HttpEntity<>(dto,headers);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
+        String jsonBody = responseEntity.getBody();
+
+        EmbedDto.FastEmbeddingResponse apiResponse;
+
+        try {
+            apiResponse = om.readValue(jsonBody, EmbedDto.FastEmbeddingResponse.class);
+
+            if (apiResponse == null) {
+                log.error("FastAPI 요청 실패 응답 Body: {}", jsonBody);
+                throw new RuntimeException("FastAPI 요청이 성공했으나, 상품 임베딩 실패.");
+            }
+
+        } catch (Exception e) {
+            log.error("FastAPI 응답 JSON 파싱에 실패했습니다. Body: {}", jsonBody, e);
+            throw new RuntimeException("FastAPI 응답 파싱 실패", e);
+        } finally {
+            long endTime = System.currentTimeMillis();
+            log.info("FastAPI 임베딩 API 호출 총 소요 시간: {}ms", (endTime - startTime));
         }
         return apiResponse;
     }

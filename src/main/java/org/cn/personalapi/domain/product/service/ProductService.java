@@ -2,9 +2,11 @@ package org.cn.personalapi.domain.product.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.cn.personalapi.domain.product.domain.Category;
 import org.cn.personalapi.domain.product.domain.Option;
 import org.cn.personalapi.domain.product.domain.Product;
 import org.cn.personalapi.domain.product.dto.CrawlingDto;
+import org.cn.personalapi.domain.product.dto.EmbedDto;
 import org.cn.personalapi.domain.product.dto.ProductDto;
 import org.cn.personalapi.domain.product.presentation.ProductConvertor;
 import org.cn.personalapi.domain.product.repository.OptionRepository;
@@ -102,6 +104,7 @@ public class ProductService {
                         .reviewCount(beauty.reviewCount() != null ? beauty.reviewCount() : 0)
                         .url(beauty.productUrl())
                         .imageUrl(beauty.imageUrl())
+                        .category(dto.category())
                         .build())
                 .toList();
 
@@ -161,5 +164,15 @@ public class ProductService {
         } catch (NumberFormatException e) {
             return 0;
         }
+    }
+
+    public void embedBeauty(Category category) {
+        List<Product> products = productRepository.findByCategory(category);
+
+        List<EmbedDto.ProductDTO> dto = products.stream().map(EmbedDto.ProductDTO::toDto).toList();
+
+        EmbedDto.FastEmbeddingResponse reuslt = fastAppUtil.embedBeauty(dto);
+
+        log.info("임베딩 결과 : {}", reuslt);
     }
 }

@@ -2,10 +2,12 @@ package org.cn.personalapi.domain.product.presentation;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.cn.personalapi.domain.product.domain.Category;
 import org.cn.personalapi.domain.product.dto.CrawlingDto;
 import org.cn.personalapi.domain.product.dto.ProductDto;
 import org.cn.personalapi.domain.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,5 +52,13 @@ public class CrawlingController {
         productService.crawlingOptions();
         return ResponseEntity.ok()
                 .body("뷰티-옵션 크롤링 성공");
+    }
+
+    @Operation(summary = "제품 카테고리별 임베딩", description = "제품 카테고리별 임베딩")
+    @PostMapping("/em-beauty/{category}")
+    public ResponseEntity<String> emBeauty(@PathVariable("category") Category category) {
+        productService.embedBeauty(category);
+        return ResponseEntity.ok()
+                .body("뷰티-상품 임베딩 성공");
     }
 }

@@ -1,5 +1,6 @@
 package org.cn.personalapi.domain.product.repository;
 
+import org.cn.personalapi.domain.product.domain.Category;
 import org.cn.personalapi.domain.product.domain.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByReviewsIsEmpty();
     List<Product> findByOptionsIsEmpty();
 
+    List<Product> findByCategory(Category category);
 
     /*
      * [베이지안 평균 정렬]
