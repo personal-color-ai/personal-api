@@ -4,6 +4,8 @@ package org.cn.personalapi.domain.product.presentation;
 
 import org.cn.personalapi.domain.product.domain.Option;
 import org.cn.personalapi.domain.product.domain.Product;
+import org.cn.personalapi.domain.product.dto.OptionDto;
+import org.cn.personalapi.domain.product.dto.ProductDto;
 import org.cn.personalapi.global.PageDto;
 import org.springframework.data.domain.Page;
 

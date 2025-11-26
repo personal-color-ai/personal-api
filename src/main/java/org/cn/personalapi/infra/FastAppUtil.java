@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.cn.personalapi.domain.product.dto.CrawlingDto;
+import org.cn.personalapi.domain.review.domain.ReviewRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 @Component
 public class FastAppUtil {
+    private final ReviewRepository reviewRepository;
 
     @Value("${service.fast-api.url}")
     private String fastUrl;
@@ -60,7 +63,7 @@ public class FastAppUtil {
         return apiResponse;
     }
 
-    public List<FastDto.Beauty> crawlingBeauty() {
+    public List<FastDto.Beauty> crawlingBeauty(CrawlingDto.BeautyReq dto) {
 
         // url 설정
         String url = UriComponentsBuilder
@@ -72,7 +75,8 @@ public class FastAppUtil {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // 요청 생성
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(headers);
+        CrawlingDto.FastBeautyReq req = new CrawlingDto.FastBeautyReq(dto.category().getCode());
+        HttpEntity<CrawlingDto.FastBeautyReq> request = new HttpEntity<>(req, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String jsonBody = responseEntity.getBody();
 

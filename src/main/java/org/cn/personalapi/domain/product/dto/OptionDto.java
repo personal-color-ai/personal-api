@@ -1,4 +1,4 @@
-package org.cn.personalapi.domain.product.presentation;
+package org.cn.personalapi.domain.product.dto;
 
 public class OptionDto {
     public record DetailRes (
