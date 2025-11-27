@@ -18,10 +18,10 @@ public class ResponseDto<T> {
     private String message;
     private T result;
 
-    public static ResponseDto<Object> success(PersonalColorReportDto report) {
-        return ResponseDto.builder()
+    public static <T> ResponseDto<T> success(T result) {
+        return ResponseDto.<T>builder()
             .status(HttpStatus.OK)
-            .result(report)
+            .result(result)
             .build();
     }
 }
