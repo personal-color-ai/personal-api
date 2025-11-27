@@ -54,6 +54,7 @@ public class EmbedService {
         List<Long> recommendedProductIds = fastAppUtil.searchProducts(personalColor, prompt);
 
         if (recommendedProductIds.isEmpty()) {
+            log.warn("프롬프트 검색 결과 없음");
             return Page.empty(PageRequest.of(page, size));
         }
 
