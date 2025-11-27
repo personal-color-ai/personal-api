@@ -47,7 +47,8 @@ public class GptTextProcessorAdapter implements AiTextProcessorPort {
             return "GPT 응답을 가져오지 못했습니다.";
         }
 
-        return chatGptResponse.getChoices().get(0).getMessage().getContent();
+        Object content = chatGptResponse.getChoices().get(0).getMessage().getContent();
+        return content instanceof String ? (String) content : content.toString();
     }
 
     private static ChatGptRequest createRequest(Message message) {
