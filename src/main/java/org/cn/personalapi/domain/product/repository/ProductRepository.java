@@ -21,6 +21,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByCategory(Category category);
 
+    List<Product> findByNameContainingOrBrandContaining(String name, String brand);
+
     /*
      * [베이지안 평균 정렬]
      * 단순 평균의 문제(리뷰 1개, 평점 5점 = 1등)를 보정하기 위한 알고리즘.
@@ -36,17 +38,22 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         SELECT p.*
         FROM product p
         LEFT JOIN review r ON p.id = r.product_id
+        WHERE (:searchKeyword IS NULL OR p.name LIKE %:searchKeyword% OR p.brand LIKE %:searchKeyword%)
         GROUP BY p.id
         ORDER BY (
-            (COUNT(r.id) / (COUNT(r.id) + :minReviews)) * (SUM(CASE WHEN r.user_description LIKE %:keyword% THEN 1 ELSE 0 END) / NULLIF(COUNT(r.id), 0)) 
+            (COUNT(r.id) / (COUNT(r.id) + :minReviews)) * (SUM(CASE WHEN r.user_description LIKE %:personalColor% THEN 1 ELSE 0 END) / NULLIF(COUNT(r.id), 0)) 
             + 
             (:minReviews / (COUNT(r.id) + :minReviews)) * :overallAvg
         ) DESC
         """,
-            countQuery = "SELECT count(*) FROM product",
+            countQuery = """
+                SELECT count(*) FROM product p
+                WHERE (:searchKeyword IS NULL OR p.name LIKE %:searchKeyword% OR p.brand LIKE %:searchKeyword%)
+            """,
             nativeQuery = true)
     Page<Product> findProductsSortedByBayesianScore(
-            @Param("keyword") String keyword,
+            @Param("personalColor") String personalColor, // 퍼스널 컬러 (예: SPRING)
+            @Param("searchKeyword") String searchKeyword, // 검색어 (예: 틴트)
             @Param("overallAvg") double overallAvg,
             @Param("minReviews") int minReviews,
             Pageable pageable
