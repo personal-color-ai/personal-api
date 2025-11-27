@@ -1,7 +1,7 @@
 package org.cn.personalapi.domain.report.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.cn.personalapi.domain.report.dto.response.PersonalColorReportDto;
+import org.cn.personalapi.domain.report.dto.response.ComplexReportResponseDto;
 import org.cn.personalapi.domain.report.service.ReportService;
 import org.cn.personalapi.global.res.ResponseDto;
 import org.springframework.http.MediaType;
@@ -22,7 +22,7 @@ public class ReportController {
     public ResponseDto<?> getReport(
         @RequestPart(value = "file") MultipartFile imageFile
     ) {
-        PersonalColorReportDto report = reportService.getReport(imageFile);
+        ComplexReportResponseDto report = reportService.getReport(imageFile);
         return ResponseDto.success(report);
     }
 }

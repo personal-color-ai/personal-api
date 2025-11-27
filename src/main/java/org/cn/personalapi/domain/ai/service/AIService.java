@@ -24,12 +24,7 @@ public class AIService {
     private final ObjectMapper objectMapper;
 
     public PersonalColorResponse extractPersonalColor(MultipartFile imageFile) {
-        PersonalColorResponse personalColorResponse = aiModelPort.ask(imageFile);
-        log.info("Personal Color Analysis - Message: {}, Image Result: {}, Probs: {}",
-            personalColorResponse.message(),
-            personalColorResponse.image().result(),
-            personalColorResponse.image().probs());
-        return personalColorResponse;
+        return aiModelPort.ask(imageFile);
     }
 
     public PersonalColorReportDto getPersonalColorReportDto(PersonalColorResponse personalColorResponse) {
@@ -38,7 +33,7 @@ public class AIService {
         log.info("GPT Response: {}", gptResponse);
 
         try {
-            String cleanedResponse = gptResponse.trim();
+            String cleanedResponse = gptResponse.strip();
             if (cleanedResponse.startsWith("```json")) {
                 cleanedResponse = cleanedResponse.substring(7);
             } else if (cleanedResponse.startsWith("```")) {
@@ -47,7 +42,7 @@ public class AIService {
             if (cleanedResponse.endsWith("```")) {
                 cleanedResponse = cleanedResponse.substring(0, cleanedResponse.length() - 3);
             }
-            cleanedResponse = cleanedResponse.trim();
+            cleanedResponse = cleanedResponse.strip();
 
             return objectMapper.readValue(cleanedResponse, PersonalColorReportDto.class);
         } catch (JsonProcessingException e) {
