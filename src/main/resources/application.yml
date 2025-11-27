@@ -20,6 +20,8 @@ spring:
 service:
   fast-api:
     url: ${FAST_API_APP}
+  product-api:
+    url: ${FAST_PRODUCT_APP}
   llm-api:
     url: ${LLM_API_URL}
     key: ${LLM_API_KEY}

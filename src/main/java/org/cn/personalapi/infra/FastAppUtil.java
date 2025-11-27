@@ -28,6 +28,9 @@ public class FastAppUtil {
 
     @Value("${service.fast-api.url}")
     private String fastUrl;
+    @Value("${service.product-api.url}")
+    private String productUrl;
+
 
     private final RestTemplate restTemplate;
     private final ObjectMapper om;
@@ -37,7 +40,7 @@ public class FastAppUtil {
 
         // url 설정
         String url = UriComponentsBuilder
-                .fromUriString(fastUrl + "/crawling/musinsa/beauty")
+                .fromUriString(productUrl + "/crawling/musinsa/beauty")
                 .queryParam("category", dto.category().getCode()) // 값 명시
                 .queryParam("page", 1)
                 .queryParam("size", 60)
@@ -73,7 +76,7 @@ public class FastAppUtil {
 
         // url 설정
         String url = UriComponentsBuilder
-            .fromUriString(fastUrl + "/crawling/musinsa/reviews")
+            .fromUriString(productUrl + "/crawling/musinsa/reviews")
             .queryParam("goods_no", goodsNo)
             .toUriString();
 
@@ -109,7 +112,7 @@ public class FastAppUtil {
 
         // url 설정
         String url = UriComponentsBuilder
-            .fromUriString(fastUrl + "/crawling/musinsa/options")
+            .fromUriString(productUrl + "/crawling/musinsa/options")
             .queryParam("goods_no", goodsNo)
             .toUriString();
 
@@ -145,7 +148,7 @@ public class FastAppUtil {
 
         // url 설정
         String url = UriComponentsBuilder
-                .fromUriString(fastUrl + "/embedding")
+                .fromUriString(productUrl + "/embedding")
                 .toUriString();
 
         // 헤더 생성
@@ -183,7 +186,7 @@ public class FastAppUtil {
 
         // url 설정 (파이썬 api 경로)
         String url = UriComponentsBuilder
-                .fromUriString(fastUrl + "/embedding/search")
+                .fromUriString(productUrl + "/embedding/search")
                 .toUriString();
 
         // 헤더 생성
