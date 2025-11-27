@@ -45,8 +45,8 @@ jobs:
             sudo rm -f .env
             sudo touch .env
             
-            echo "LLM_API_URL=${{ secrets.FAST_API_APP }}" | sudo tee -a .env
-            echo "LLM_API_URL=${{ secrets.FAST_PRODUCT_APP }}" | sudo tee -a .env
+            echo "FAST_API_APP=${{ secrets.FAST_API_APP }}" | sudo tee -a .env
+            echo "FAST_PRODUCT_APP=${{ secrets.FAST_PRODUCT_APP }}" | sudo tee -a .env
       
             echo "LLM_API_URL=${{ secrets.LLM_API_URL }}" | sudo tee -a .env
             echo "LLM_API_KEY=${{ secrets.LLM_API_KEY }}" | sudo tee -a .env
