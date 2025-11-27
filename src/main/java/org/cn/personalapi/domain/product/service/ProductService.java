@@ -11,16 +11,21 @@ import org.cn.personalapi.domain.product.repository.OptionRepository;
 import org.cn.personalapi.domain.product.repository.ProductRepository;
 import org.cn.personalapi.domain.review.domain.Review;
 import org.cn.personalapi.domain.review.domain.ReviewRepository;
+import org.cn.personalapi.domain.user.domain.PersonalType;
 import org.cn.personalapi.domain.user.domain.User;
 import org.cn.personalapi.domain.user.repository.UserRepository;
 import org.cn.personalapi.global.ex.CustomException;
 import org.cn.personalapi.infra.FastAppUtil;
 import org.cn.personalapi.infra.FastDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,30 +38,36 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
     private final OptionRepository optionRepository;
-    private final UserRepository userRepository; // UserRepository 주입
+    private final UserRepository userRepository;
     private final FastAppUtil fastAppUtil;
 
-    // 전체 조회 -> 페이징 조회로 변경 [Critical B 해결]
-    public Page<Product> getProducts(Long memberId, Integer page, Integer size) {
+    private static final int MINIMUM_REVIEWS = 5;
+
+    @Transactional(readOnly = true)
+    public Page<Product> getProducts(Long memberId, String keyword, Integer page, Integer size) {
         User user = userRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException("사용자를 찾을 수 없습니다."));
-        String searchKeyword = "%" + user.getPersonalType().getValue() + "%"; // keyword 통일
 
-        // 1. 전체 평균(C) 계산
-        // 전체 리뷰 수
+        // 1. 퍼스널 컬러 키워드 (리뷰 매칭용)
+        String personalColorKeyword = user.getPersonalType().getValue(); // 또는 .name() 확인 필요 (User.java의 PersonalType enum 확인)
+
+        // 2. 전체 평균 계산 (최적화: count 쿼리 사용)
         long totalReviews = reviewRepository.count();
-        // 매칭되는 전체 리뷰 수 (count 쿼리 활용)
-        long totalMatchingReviews = reviewRepository.countByUserDescriptionContaining(searchKeyword);
+        long matchingReviews = reviewRepository.countByUserDescriptionContaining(personalColorKeyword);
+        double overallAverage = (totalReviews > 0) ? (double) matchingReviews / totalReviews : 0.0;
 
-        double overallAverage = (totalReviews > 0) ? (double) totalMatchingReviews / totalReviews : 0.0;
-        final int MINIMUM_REVIEWS = 5;
+        // 3. 쿼리 호출 (검색어 + 정렬)
+        Pageable pageable = PageRequest.of(page, size);
 
-        // 2. DB 레벨에서 베이지안 점수 계산 및 페이징
+        // keyword가 null이거나 빈 문자열이면 null로 처리하여 쿼리로 전달
+        String searchParam = (keyword != null && !keyword.isBlank()) ? keyword : null;
+
         return productRepository.findProductsSortedByBayesianScore(
-                searchKeyword,
+                personalColorKeyword,  // 리뷰 점수 계산용 (내 퍼스널 컬러)
+                searchParam,           // 상품 검색용 (사용자 입력 키워드)
                 overallAverage,
                 MINIMUM_REVIEWS,
-                PageRequest.of(page, size)
+                pageable
         );
     }
 
@@ -73,10 +84,6 @@ public class ProductService {
         return reviewRepository.findByProductId(productId);
     }
 
-    @Transactional
-    public void crawlingFashion() {
-        // TODO 패션 크롤링 구현 필요
-    }
 
     @Transactional
     public void crawlingBeauty(CrawlingDto.BeautyReq dto) {
@@ -163,6 +170,4 @@ public class ProductService {
             return 0;
         }
     }
-
-
 }

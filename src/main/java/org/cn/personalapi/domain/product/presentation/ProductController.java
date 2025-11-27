@@ -24,6 +24,8 @@ public class ProductController {
     public ResponseEntity<ResponseDto<?>> getProducts(
             @Parameter(description = "로그인 사용자의 ID", example = "1")
             @RequestParam(value = "member-id") Long memberId,
+            @Parameter(description = "검색 키워드")
+            @RequestParam(value = "keyword", required = false) String keyword,
             @Parameter(description = "페이지 (0부터 시작)")
             @RequestParam(value = "page", required = false) Integer page,
             @Parameter(description = "페이지 당 사이즈")
@@ -34,7 +36,7 @@ public class ProductController {
                 .body(ResponseDto.builder()
                         .status(HttpStatus.OK)
                         .message("상품 리스트 조회 성공")
-                        .result(ProductConvertor.toPageListRes(productService.getProducts(memberId, page, size)))
+                        .result(ProductConvertor.toPageListRes(productService.getProducts(memberId, keyword, page, size)))
                         .build());
     }
 
