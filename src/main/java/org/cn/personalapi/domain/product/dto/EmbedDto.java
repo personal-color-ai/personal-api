@@ -6,6 +6,7 @@ import lombok.Builder;
 import org.cn.personalapi.domain.product.domain.Product;
 import org.cn.personalapi.domain.review.domain.Review;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class EmbedDto {
@@ -27,7 +28,11 @@ public class EmbedDto {
                     .rating(product.getRating())
                     .reviewCountAll(product.getReviewCount())
                     .category(product.getCategory().name()) // [추가] "BASE", "LIP" 등으로 변환
-                    .review(product.getReviews().stream().map(ReviewDTO::toDto).toList())
+                    .review(product.getReviews().stream()
+                            .sorted(Comparator.comparing(Review::getLikes).reversed())
+                            .limit(3) // 3개까지만
+                            .map(ReviewDTO::toDto)
+                            .toList())
                     .build();
         }
     }

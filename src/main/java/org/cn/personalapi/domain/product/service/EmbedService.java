@@ -52,8 +52,10 @@ public class EmbedService {
 
         // 2. 파이썬 API 호출하여 추천 상품 ID 리스트 획득
         List<Long> recommendedProductIds = fastAppUtil.searchProducts(personalColor, prompt);
+        log.info("프롬프트 검색 결과{}", recommendedProductIds);
 
         if (recommendedProductIds.isEmpty()) {
+            log.warn("프롬프트 검색 결과 없음");
             return Page.empty(PageRequest.of(page, size));
         }
 
