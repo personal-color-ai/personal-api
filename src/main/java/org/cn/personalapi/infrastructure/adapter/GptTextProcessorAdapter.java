@@ -56,7 +56,7 @@ public class GptTextProcessorAdapter implements AiTextProcessorPort {
             .model("gpt-4o-mini")
             .messages(List.of(message))
             .temperature(0.0)
-            .max_tokens(300)
+            .max_tokens(600)
             .frequency_penalty(0.0) // temperature: 모델이 응답을 생성할 때의 창의성 또는 무작위성을 조절합니다.
             .build();
     }

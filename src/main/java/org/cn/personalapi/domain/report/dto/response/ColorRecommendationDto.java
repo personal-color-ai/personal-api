@@ -4,8 +4,8 @@ import java.util.List;
 
 public record ColorRecommendationDto(
     String colorType,
-    List<String> bestColors,
-    List<String> worstColors
+    List<ColorDto> bestColors,
+    List<ColorDto> worstColors
 ) {
 
 }
